@@ -84,11 +84,10 @@ describe('User Model', () => {
       .expects('findOne')
       .withArgs({
         key: 'testKey',
-        value: 'testValue'
       })
       .yields(null, expectedItem);
 
-    CacheItem.findOne({ key: 'testKey' }, (err, result) => {
+    CacheItem.findOne({ key: 'testKey', }, (err, result) => {
       CacheItemMock.verify();
       CacheItemMock.restore();
       expect(result.key).to.equal('testKey');
@@ -106,7 +105,6 @@ describe('User Model', () => {
       .expects('remove')
       .withArgs({
         key: 'testKey',
-        value: 'testValue'
       })
       .yields(null, expectedResult);
 

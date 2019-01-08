@@ -10,7 +10,7 @@
   "license": "MIT",
   "scripts": {
     "start": "node app.js",
-    "test": "nyc mocha --timeout=3000 --exit",
+    "test": "export NODE_ENV=development && nyc mocha --timeout=3000 --exit",
     "lint": "eslint **/*.js"
   },
   "dependencies": {
