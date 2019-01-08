@@ -14,3 +14,7 @@ exports.generateRandomString = (len = 50,
 
   return randomString;
 };
+
+exports.getExpiryTimestamp = ttl => Date.now() + ttl;
+
+exports.isItemExpired = expiryDate => expiryDate > Date.now();

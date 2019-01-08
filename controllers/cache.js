@@ -27,21 +27,26 @@ exports.getItem = (req, res, next) => {
       if (cachedItem) {
         logger.log('Cache hit');
 
-        res.status(HttpStatus.OK).send(cachedItem);
-      } else {
-        logger.log('Cache miss');
-        const value = utils.generateRandomString();
+        if (!utils.isItemExpired(cachedItem)) {
+          // Implicitly reset the expiry
+          cachedItem.save();
 
-        const cacheItem = new CacheItem({
-          key,
-          value,
-        });
-
-        cacheItem.save()
-          .then(() => {
-            res.status(HttpStatus.CREATED).send(cacheItem);
-          }).catch(err => next(err));
+          return res.status(HttpStatus.OK).send(cachedItem);
+        }
       }
+
+      logger.log('Cache miss');
+      const value = utils.generateRandomString();
+
+      const cacheItem = new CacheItem({
+        key,
+        value,
+      });
+
+      cacheItem.save()
+        .then(() => {
+          res.status(HttpStatus.CREATED).send(cacheItem);
+        }).catch(err => next(err));
     }).catch(err => next(err));
 };
 
@@ -61,7 +66,7 @@ exports.setItem = (req, res, next) => {
   }
 
   const { key, } = req.params;
-  const { value, } = req.body;
+  const { value, ttl, } = req.body;
 
   CacheItem.findOne({ key, })
     .then((cachedItem) => {
@@ -72,6 +77,7 @@ exports.setItem = (req, res, next) => {
         const cacheItem = new CacheItem({
           key,
           value,
+          ttl,
         });
 
         cacheItem.save()
