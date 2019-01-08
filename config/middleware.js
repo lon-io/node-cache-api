@@ -9,10 +9,6 @@ module.exports = (app) => {
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(expressValidator());
-  app.use((req, res, next) => {
-    res.locals.user = req.user;
-    next();
-  });
 
   // Error Handler
   if (process.env.NODE_ENV === 'development') {

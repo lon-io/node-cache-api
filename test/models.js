@@ -4,7 +4,7 @@ require('sinon-mongoose');
 
 const CacheItem = require('../models/CacheItem');
 
-describe('User Model', () => {
+describe('Cache Model', () => {
   it('should create a Cache Item', (done) => {
     const CacheItemMock = sinon.mock(new CacheItem({
       key: 'testKey',
