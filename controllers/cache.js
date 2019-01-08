@@ -1,8 +1,8 @@
-const logger = require('morgan');
 const HttpStatus = require('http-status-codes');
-const CacheItem = require('../models/CacheItem');
-const utils = require('../libs/utils');
 
+const CacheItem = require('../models/CacheItem');
+const logger = require('../libs/logger');
+const utils = require('../libs/utils');
 
 /**
  * GET /cache
@@ -11,7 +11,7 @@ const utils = require('../libs/utils');
 exports.getAllItems = (req, res, next) => {
   CacheItem.find({})
     .then((items) => {
-      res.status(HttpStatus.OK).send(items);
+      res.status(HttpStatus.OK).json(items);
     }).catch(err => next(err));
 };
 
@@ -25,7 +25,7 @@ exports.getItem = (req, res, next) => {
   CacheItem.findOne({ key, })
     .then((cachedItem) => {
       if (cachedItem) {
-        logger.log('Cache hit');
+        logger.info('Cache hit');
 
         // Generate a random value if item is expired
         if (utils.isItemExpired(cachedItem)) {
@@ -35,10 +35,10 @@ exports.getItem = (req, res, next) => {
         // Silently save (also Implicitly resets the expiry - see 'save' hook)
         cachedItem.save();
 
-        return res.status(HttpStatus.OK).send(cachedItem);
+        return res.status(HttpStatus.OK).json(cachedItem);
       }
 
-      logger.log('Cache miss');
+      logger.info('Cache miss');
       const value = utils.generateRandomString();
 
       const cacheItem = new CacheItem({
@@ -47,9 +47,7 @@ exports.getItem = (req, res, next) => {
       });
 
       cacheItem.save()
-        .then(() => {
-          res.status(HttpStatus.CREATED).send(cacheItem);
-        }).catch(err => next(err));
+        .then(() => res.status(HttpStatus.CREATED).json(cacheItem)).catch(err => next(err));
     }).catch(err => next(err));
 };
 
@@ -75,7 +73,7 @@ exports.setItem = (req, res, next) => {
     .then((cachedItem) => {
       if (cachedItem) {
         cachedItem.value = value;
-        res.status(HttpStatus.OK).send(cachedItem);
+        res.status(HttpStatus.OK).json(cachedItem);
       } else {
         const cacheItem = new CacheItem({
           key,
@@ -85,7 +83,7 @@ exports.setItem = (req, res, next) => {
 
         cacheItem.save()
           .then(() => {
-            res.send(cacheItem);
+            res.json(cacheItem);
           }).catch(err => next(err));
       }
     }).catch(err => next(err));

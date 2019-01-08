@@ -25,7 +25,7 @@ cacheItemSchema.pre('save', function save(next) {
         // Delete the oldest item
         CacheItem.findOneAndRemove({}, {}, { sort: { created_at: 1 } })
           .then(() => next());
-      }
+      } else next();
     });
   /* eslint-enable no-use-before-define */
 });

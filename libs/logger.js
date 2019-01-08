@@ -13,4 +13,14 @@ winston.config.addColors({
   debug: 'green'
 });
 
-module.exports = new winston.Logger({});
+module.exports = new winston.Logger({
+  transports: [
+    new winston.transports.Console({
+      name: 'log-console',
+      colorize: true,
+      prettyPrint: true,
+      silent: false,
+      level: 'debug'
+    })
+  ]
+});

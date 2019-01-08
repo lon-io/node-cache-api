@@ -7,7 +7,7 @@ COPY package.json /nodecacheapi/package.json
 
 RUN npm install
 
-COPY .env.example /nodecacheapi/.env.example
+COPY .env.dev /nodecacheapi/.env.dev
 COPY . /nodecacheapi
 
 CMD ["npm","start"]
