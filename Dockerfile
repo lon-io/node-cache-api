@@ -5,7 +5,7 @@ ENV NODE_ENV development
 
 COPY package.json /nodecacheapi/package.json
 
-RUN npm install --production
+RUN npm install
 
 COPY .env.example /nodecacheapi/.env.example
 COPY . /nodecacheapi

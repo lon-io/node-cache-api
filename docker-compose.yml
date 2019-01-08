@@ -2,8 +2,15 @@ version: '3'
 services:
   mongo:
     image: mongo:3.6
+    container_name: nodecacheapi_db
+    ports:
+      - 27017:27022
   web:
     build: .
+    container_name: nodecacheapi_web
+    stdin_open: true
+    tty: true
+    command: tail -f /dev/null # Keep the container alive
     ports:
      - "8080:8080"
     environment:
