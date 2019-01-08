@@ -4,7 +4,7 @@ services:
     image: mongo:3.6
     container_name: nodecacheapi_db
     ports:
-      - 27017:27022
+      - 27023:27017
   web:
     build: .
     container_name: nodecacheapi_web
@@ -14,7 +14,7 @@ services:
     ports:
      - "8080:8080"
     environment:
-     - MONGODB_URI=mongodb://mongo:27017/test
+     - MONGODB_URI=mongodb://mongo:27017/nodecacheapi
     links:
      - mongo
     depends_on:
