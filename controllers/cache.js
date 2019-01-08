@@ -3,8 +3,20 @@ const HttpStatus = require('http-status-codes');
 const CacheItem = require('../models/CacheItem');
 const utils = require('../libs/utils');
 
+
 /**
  * GET /cache
+ * Add a item in the cached
+ */
+exports.getAllItems = (req, res, next) => {
+  CacheItem.find({})
+    .then((items) => {
+      res.status(HttpStatus.OK).send(items);
+    }).catch(err => next(err));
+};
+
+/**
+ * GET /cache/:key
  * get cached item
  */
 exports.getItem = (req, res, next) => {
@@ -34,7 +46,7 @@ exports.getItem = (req, res, next) => {
 };
 
 /**
- * POST /cache
+ * POST /cache/:key { value }
  * Add a item in the cached
  */
 exports.setItem = (req, res, next) => {
@@ -67,5 +79,29 @@ exports.setItem = (req, res, next) => {
             res.send(cacheItem);
           }).catch(err => next(err));
       }
+    }).catch(err => next(err));
+};
+
+/**
+ * DELETE /cache/:key
+ * Delete an item from the cache
+ */
+exports.deleteItem = (req, res, next) => {
+  const { key, } = req.params;
+
+  CacheItem.remove({ key, })
+    .then(() => {
+      res.status(HttpStatus.OK).end();
+    }).catch(err => next(err));
+};
+
+/**
+ * DELETE /cache
+ * Clean all items from the cache
+ */
+exports.clearData = (req, res, next) => {
+  CacheItem.remove({})
+    .then(() => {
+      res.status(HttpStatus.OK).end();
     }).catch(err => next(err));
 };
