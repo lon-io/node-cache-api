@@ -27,12 +27,15 @@ exports.getItem = (req, res, next) => {
       if (cachedItem) {
         logger.log('Cache hit');
 
-        if (!utils.isItemExpired(cachedItem)) {
-          // Implicitly reset the expiry
-          cachedItem.save();
-
-          return res.status(HttpStatus.OK).send(cachedItem);
+        // Generate a random value if item is expired
+        if (utils.isItemExpired(cachedItem)) {
+          cachedItem.value = utils.generateRandomString();
         }
+
+        // Silently save (also Implicitly resets the expiry - see 'save' hook)
+        cachedItem.save();
+
+        return res.status(HttpStatus.OK).send(cachedItem);
       }
 
       logger.log('Cache miss');
