@@ -73,6 +73,8 @@ exports.setItem = (req, res, next) => {
     .then((cachedItem) => {
       if (cachedItem) {
         cachedItem.value = value;
+        cachedItem.save();
+
         res.status(HttpStatus.OK).json(cachedItem);
       } else {
         const cacheItem = new CacheItem({

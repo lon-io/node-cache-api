@@ -24,11 +24,6 @@ cacheItemSchema.pre('save', function save(next) {
     /* eslint-disable no-use-before-define */
     CacheItem.countDocuments()
       .then((numberOfItems) => {
-        console.log('numberOfItems');
-        console.log('numberOfItems');
-        console.log('numberOfItems');
-        console.log('numberOfItems');
-        console.log('numberOfItems');
         if (numberOfItems >= config.CACHE_SIZE_LIMIT) {
           logger.info('Maximum exceeded, removing oldest item...');
 
@@ -41,7 +36,7 @@ cacheItemSchema.pre('save', function save(next) {
             });
         } else next();
       });
-  }
+  } else next();
   /* eslint-enable no-use-before-define */
 });
 
